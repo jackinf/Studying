@@ -3,6 +3,13 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="5.1.2" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="5.1.2" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.4.118" />
+  </ItemGroup>
 
 </Project>
