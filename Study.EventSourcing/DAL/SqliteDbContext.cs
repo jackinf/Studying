@@ -1,4 +1,5 @@
 ﻿using SQLite;
+using Study.EventSourcing.DAL.EventSourcing;
 
 namespace Study.EventSourcing.DAL
 {
@@ -14,6 +15,7 @@ namespace Study.EventSourcing.DAL
         public void CreateTables()
         {
             Db.CreateTable<Person>();
+            Db.CreateTable<PersonNameChangedHistory>();
         }
     }
 }
