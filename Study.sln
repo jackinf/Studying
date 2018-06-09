@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Study.Websocket.Client", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Study.Websocket.Common", "Study.Websocket.Common\Study.Websocket.Common.csproj", "{3E9C2024-09C3-4496-8EAE-A2AB726D0622}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Study.EventSourcing", "Study.EventSourcing\Study.EventSourcing.csproj", "{803F1721-3D2D-4180-A6AB-51A8B7E3684E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{3E9C2024-09C3-4496-8EAE-A2AB726D0622}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E9C2024-09C3-4496-8EAE-A2AB726D0622}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E9C2024-09C3-4496-8EAE-A2AB726D0622}.Release|Any CPU.Build.0 = Release|Any CPU
+		{803F1721-3D2D-4180-A6AB-51A8B7E3684E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{803F1721-3D2D-4180-A6AB-51A8B7E3684E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{803F1721-3D2D-4180-A6AB-51A8B7E3684E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{803F1721-3D2D-4180-A6AB-51A8B7E3684E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
