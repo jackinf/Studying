@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -28,7 +29,7 @@ namespace Study.Websocket.Client
                 var json = JsonConvert.SerializeObject(message);
                 var bytes = Encoding.UTF8.GetBytes(json);
                 var buffer = new ArraySegment<byte>(bytes);
-                await ws.SendAsync(buffer.Array, WebSocketMessageType.Binary, true, token);
+                await ws.SendAsync(buffer.Array, WebSocketMessageType.Text, true, token);
                 Console.WriteLine("Sent");
             }
 
@@ -39,18 +40,33 @@ namespace Study.Websocket.Client
 
         private static async Task Receive(ClientWebSocket webSocket, CancellationToken token)
         {
-            byte[] buffer = new byte[8192];
             while (webSocket.State == WebSocketState.Open)
             {
-                var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), token);
-                if (result.MessageType == WebSocketMessageType.Close)
+                using (var ms = new MemoryStream())
                 {
-                    await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, token);
-                }
-                else
-                {
-                    var json = Encoding.UTF8.GetString(buffer);
-                    Console.WriteLine(json);
+                    var buffer = new ArraySegment<byte>(new byte[8192]);
+                    WebSocketReceiveResult result;
+                    do
+                    {
+                        result = await webSocket.ReceiveAsync(buffer, token);
+                        ms.Write(buffer.Array, buffer.Offset, buffer.Count);
+                    } while (!result.EndOfMessage);
+
+                    ms.Seek(0, SeekOrigin.Begin);
+
+                    if (result.MessageType == WebSocketMessageType.Close)
+                    {
+                        await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, token);
+                    }
+                    else
+                    {
+                        using (var reader = new StreamReader(ms, Encoding.UTF8))
+                        {
+                            var json = await reader.ReadToEndAsync();
+                            var message = JsonConvert.DeserializeObject<Message<string>>(json);
+                            Console.WriteLine(message.Data);
+                        }
+                    }
                 }
             }
         }

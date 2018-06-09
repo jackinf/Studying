@@ -14,7 +14,7 @@ namespace Study.Websocket.Server
                 var message = await ws.Receive<string>();
                 if (message == null)
                     break;
-                await ws.Send(new Message<string> {Data = $"Got {message.Data}. Right back at ya."});
+                await ws.Send($"Got {message.Data}. Right back at ya.");
             }
         }
     }
