@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MassTransit;
+using Newtonsoft.Json;
 using Study.EventSourcing.Command;
 using Study.EventSourcing.DAL;
 using Study.EventSourcing.DAL.EventSourcingHistory;
@@ -9,34 +11,50 @@ using Study.EventSourcing.Event;
 
 namespace Study.EventSourcing.Consumer
 {
-    public class UpdatePersonConsumer : IConsumer<ChangePersonName>, IConsumer<PersonNameChanged>
+    public class UpdatePersonConsumer : 
+        IConsumer<ChangePersonNameCommand>,
+        IConsumer<BatchedPersonNameChangedEvent>
     {
+        private readonly object _lock = new object();
+         
         /*
          * Commands
          */
 
-        public async Task Consume(ConsumeContext<ChangePersonName> context)
+        public async Task Consume(ConsumeContext<ChangePersonNameCommand> context)
         {
-            await Console.Out.WriteLineAsync($"Updating person with id {context.Message.Id} to new name {context.Message.NewName}");
+            PersonNameChangedHistoryItem FromCommandToHistoryItem(PersonNameChangedEvent eventInner)
+                => new PersonNameChangedHistoryItem { UpdatedOn = DateTime.UtcNow, Payload = JsonConvert.SerializeObject(eventInner) };
 
-            // db operation
-            var personRepository = new PersonRepository(new SqliteDbContext());
-            var person = personRepository.Get(context.Message.Id);
-            person.Name = context.Message.NewName;
-            personRepository.Update(person);
+            PersonNameChangedEvent FromCommandToEvent(ChangePersonNameCommand command)
+                => new PersonNameChangedEvent { Id = command.Id, Name = command.NewName };
+
+            // store history item
+            var historyRepository = new EventSourcingRepository(new SqliteDbContext());
+            var @event = FromCommandToEvent(context.Message);
+            var item = FromCommandToHistoryItem(@event);
+            historyRepository.AddHistoryItem(item);
+
+            await context.Publish(new BatchedPersonNameChangedEvent { Events = new List<PersonNameChangedEvent> { @event } });
         }
 
         /*
          * Events
          */
 
-        public async Task Consume(ConsumeContext<PersonNameChanged> context)
+        public async Task Consume(ConsumeContext<BatchedPersonNameChangedEvent> context)
         {
-            var historyRepository = new EventSourcingRepository(new SqliteDbContext());
-            var item = PersonNameChangedHistoryItem.FromEvent(context.Message);
-            historyRepository.AddHistoryItem(item);
+            foreach (var personNameChangedEvent in context.Message.Events)
+            {
+                await Console.Out.WriteLineAsync($"Updating person with id {personNameChangedEvent.Id} to new name {personNameChangedEvent.Name}");
 
-            await Task.CompletedTask;
+                // db operation
+                var personRepository = new PersonRepository(new SqliteDbContext());
+                var person = personRepository.Get(personNameChangedEvent.Id);
+                person.Name = personNameChangedEvent.Name;
+                lock (_lock)
+                    personRepository.Update(person);
+            }
         }
     }
 }

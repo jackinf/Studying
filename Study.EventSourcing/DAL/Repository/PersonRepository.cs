@@ -15,8 +15,5 @@ namespace Study.EventSourcing.DAL.Repository
         public void Update(Person person) => _context.Db.Update(person);
         public Person Get(int id) => _context.Db.Table<Person>().FirstOrDefault(x => x.Id == id);
         public Person Find(string keyword) => _context.Db.Table<Person>().FirstOrDefault(x => x.Keyword == keyword);
-
-        public void AddHistoryItem(PersonNameChangedHistory @event)
-            => _context.Db.Insert(@event);
     }
 }

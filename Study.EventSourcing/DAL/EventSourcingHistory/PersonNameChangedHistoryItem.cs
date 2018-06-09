@@ -12,13 +12,6 @@ namespace Study.EventSourcing.DAL.EventSourcingHistory
         public string Payload { get; set; }
         public DateTime UpdatedOn { get; set; }
 
-        public PersonNameChanged GetEvent() => JsonConvert.DeserializeObject<PersonNameChanged>(Payload);
-
-        public static PersonNameChangedHistoryItem FromEvent(PersonNameChanged @event)
-            => new PersonNameChangedHistoryItem
-            {
-                UpdatedOn = DateTime.UtcNow,
-                Payload = JsonConvert.SerializeObject(@event)
-            };
+        public PersonNameChangedEvent GetEvent() => JsonConvert.DeserializeObject<PersonNameChangedEvent>(Payload);
     }
 }

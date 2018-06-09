@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MassTransit;
 using Study.EventSourcing.Command;
 using Study.EventSourcing.DAL;
 using Study.EventSourcing.DAL.Repository;
+using Study.EventSourcing.Event;
 
 namespace Study.EventSourcing
 {
@@ -18,6 +21,7 @@ namespace Study.EventSourcing
             var bus = BusConfigurator.CreateBus();
             await bus.StartAsync();
 
+            // Create or get dummy person
             var personRepository = new PersonRepository(context);
             var person = personRepository.Find(KeywordDummy);
             if (person == null)
@@ -26,13 +30,18 @@ namespace Study.EventSourcing
                 person = personRepository.Find(KeywordDummy);
             }
 
+            // Replay history
+            var historyItems = new EventSourcingRepository(context).GetHistoryItems();
+            var events = historyItems?.Select(x => x.GetEvent()).ToList() ?? new List<PersonNameChangedEvent>();
+            await bus.Publish(new BatchedPersonNameChangedEvent {Events = events});
+
             while (true)
             {
                 Console.WriteLine("Enter new name");
                 var newName = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(newName))
                     break;
-                await bus.Publish(new ChangePersonName {Id = person.Id, NewName = newName});
+                await bus.Publish(new ChangePersonNameCommand {Id = person.Id, NewName = newName});
             }
 
             Console.WriteLine("Press any key to exit");
