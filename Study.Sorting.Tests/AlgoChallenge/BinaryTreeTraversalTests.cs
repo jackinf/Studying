@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using Study.Sorting.AlgoChallenge;
+using Study.Algo.AlgoChallenge;
 
-namespace Study.Sorting.Tests.AlgoChallenge
+namespace Study.Algo.Tests.AlgoChallenge
 {
     public class BinaryTreeTraversalTests
     {

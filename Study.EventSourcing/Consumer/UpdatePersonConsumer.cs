@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using Newtonsoft.Json;
@@ -13,11 +14,12 @@ namespace Study.EventSourcing.Consumer
 {
     public class UpdatePersonConsumer : 
         IConsumer<ChangePersonNameCommand>,
-        IConsumer<BatchedPersonNameChangedEvent>
+        IConsumer<BatchedPersonNameChangedEvent>,
+        IConsumer<PersonNameChangedEvent>
     {
         private readonly object _lock = new object();
-         
-        /*
+
+         /*
          * Commands
          */
 
@@ -35,7 +37,7 @@ namespace Study.EventSourcing.Consumer
             var item = FromCommandToHistoryItem(@event);
             historyRepository.AddHistoryItem(item);
 
-            await context.Publish(new BatchedPersonNameChangedEvent { Events = new List<PersonNameChangedEvent> { @event } });
+            await context.Publish(@event);
         }
 
         /*
@@ -45,16 +47,27 @@ namespace Study.EventSourcing.Consumer
         public async Task Consume(ConsumeContext<BatchedPersonNameChangedEvent> context)
         {
             foreach (var personNameChangedEvent in context.Message.Events)
-            {
-                await Console.Out.WriteLineAsync($"Updating person with id {personNameChangedEvent.Id} to new name {personNameChangedEvent.Name}");
+                await OnPersonNameChangedEvent(personNameChangedEvent);
+        }
 
+        public async Task Consume(ConsumeContext<PersonNameChangedEvent> context)
+        {
+            await OnPersonNameChangedEvent(context.Message);
+        }
+
+        private async Task OnPersonNameChangedEvent(PersonNameChangedEvent personNameChangedEvent)
+        {
+            Console.WriteLine($"Thread id: {Thread.CurrentThread.ManagedThreadId}");
+            await Console.Out.WriteLineAsync($"Updating person with id {personNameChangedEvent.Id} to new name {personNameChangedEvent.Name}");
+            lock (_lock)
+            {
                 // db operation
                 var personRepository = new PersonRepository(new SqliteDbContext());
                 var person = personRepository.Get(personNameChangedEvent.Id);
                 person.Name = personNameChangedEvent.Name;
-                lock (_lock)
-                    personRepository.Update(person);
+                personRepository.Update(person);
             }
+
         }
     }
 }

@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Study.Sorting\Study.Sorting.csproj" />
+    <ProjectReference Include="..\Study.Sorting\Study.Algo.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Study.Sorting
+namespace Study.Algo
 {
     class Program
     {

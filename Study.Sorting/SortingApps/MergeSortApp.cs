@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Study.Sorting.SortingApps
+namespace Study.Algo.SortingApps
 {
     public class MergeSortApp
     {

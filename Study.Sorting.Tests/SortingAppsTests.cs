@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
-using Study.Sorting.SortingApps;
+using Study.Algo.SortingApps;
 
-namespace Study.Sorting.Tests
+namespace Study.Algo.Tests
 {
     public class SortingAppsTests
     {

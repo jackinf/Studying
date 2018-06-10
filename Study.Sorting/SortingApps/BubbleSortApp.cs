@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Study.Sorting.SortingApps
+namespace Study.Algo.SortingApps
 {
     public class BubbleSortApp
     {

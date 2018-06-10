@@ -16,7 +16,11 @@ namespace Study.EventSourcing
                     h.Password("guest");
                 });
 
-                sbc.ReceiveEndpoint(host, "person_queue", ep => ep.Consumer<UpdatePersonConsumer>());
+                sbc.ReceiveEndpoint(host, "person_queue", ep =>
+                {
+                    ep.Consumer<UpdatePersonConsumer>();
+                    ep.BindMessageExchanges = true;
+                });
             });
             return bus;
         }

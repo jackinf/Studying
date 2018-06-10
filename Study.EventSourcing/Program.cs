@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MassTransit;
 using Study.EventSourcing.Command;
 using Study.EventSourcing.DAL;
+using Study.EventSourcing.DAL.Model;
 using Study.EventSourcing.DAL.Repository;
 using Study.EventSourcing.Event;
 
@@ -33,7 +34,9 @@ namespace Study.EventSourcing
             // Replay history
             var historyItems = new EventSourcingRepository(context).GetHistoryItems();
             var events = historyItems?.Select(x => x.GetEvent()).ToList() ?? new List<PersonNameChangedEvent>();
-            await bus.Publish(new BatchedPersonNameChangedEvent {Events = events});
+            await bus.Publish(new BatchedPersonNameChangedEvent { Events = events });
+            //foreach (var personNameChangedEvent in events)
+            //    await bus.Publish(personNameChangedEvent);
 
             while (true)
             {

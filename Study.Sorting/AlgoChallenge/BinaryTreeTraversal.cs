@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
-namespace Study.Sorting.AlgoChallenge
+namespace Study.Algo.AlgoChallenge
 {
     public class BinaryTreeTraversal
     {

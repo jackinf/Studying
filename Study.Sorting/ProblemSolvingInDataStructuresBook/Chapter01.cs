@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Study.Sorting.ProblemSolvingInDataStructuresBook
+namespace Study.Algo.ProblemSolvingInDataStructuresBook
 {
     public class Chapter01
     {

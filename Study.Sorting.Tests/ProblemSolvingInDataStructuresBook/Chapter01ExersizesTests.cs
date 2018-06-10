@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
-using Study.Sorting.ProblemSolvingInDataStructuresBook;
+using Study.Algo.ProblemSolvingInDataStructuresBook;
 
-namespace Study.Sorting.Tests.ProblemSolvingInDataStructuresBook
+namespace Study.Algo.Tests.ProblemSolvingInDataStructuresBook
 {
     public class Chapter01ExersizesTests
     {

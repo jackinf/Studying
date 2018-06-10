@@ -1,6 +1,6 @@
 ﻿using SQLite;
 
-namespace Study.EventSourcing.DAL
+namespace Study.EventSourcing.DAL.Model
 {
     public class Person
     {
