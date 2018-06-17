@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
 using Study.Algo.AlgoChallenge;
@@ -17,8 +18,10 @@ namespace Study.Algo.Tests.AlgoChallenge
         [Test]
         public void Test01()
         {
-
+            var sw = Stopwatch.StartNew();
             var codes = PromoCodes.Generate().Take(1000).ToList();
+            sw.Stop();
+            var time = sw.ElapsedMilliseconds;
             Assert.AreEqual(1000, codes.Count);
 
             foreach (var code in codes)

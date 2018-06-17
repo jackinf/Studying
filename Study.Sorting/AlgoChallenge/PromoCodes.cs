@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Study.Algo.Combinatorics;
 
 namespace Study.Algo.AlgoChallenge
 {
@@ -20,28 +21,28 @@ namespace Study.Algo.AlgoChallenge
     /// </summary>
     public static class PromoCodes
     {
-        private static readonly int MinimalPossibleSum = GetPromoCodeFormulaSum(1, 1, 2, 2, 3, 3, 4, 4, 5); // 95
+        private static readonly int MinimalPossibleSum = GetPromoCodeFormulaSum(0, 0, 1, 1, 2, 2, 3, 3, 4); // 50
         private static readonly int MaximumPossibleSum = GetPromoCodeFormulaSum(9, 9, 8, 8, 7, 7, 6, 6, 5); // 355
         private static readonly IEnumerable<int> ValidRange = Enumerable.Range(MinimalPossibleSum, MaximumPossibleSum - MinimalPossibleSum);
 
-        // 24 numbers: 99, 110, 121, 132, 143, 154, 165, 176, 187, 198, 209, 220, 231, 242, 253, 264, 275, 286, 297, 308, 319, 330, 341, 352
+        // 28 numbers: 55, 66, 77, 88, 99, 110, 121, 132, 143, 154, 165, 176, 187, 198, 209, 220, 231, 242, 253, 264, 275, 286, 297, 308, 319, 330, 341, 352
         private static readonly HashSet<int> ValidSumsDivisiblesBy11 = ValidRange.Where(number => number % 11 == 0).ToHashSet();
         
         public static IEnumerable<string> Generate()
         {
-            List<int> numbersPossibleToUse = new List<int> {1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9};
+            List<int> numbersPossibleToUse = new List<int> {0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9};
             Dictionary<string, bool> usedCodes = new Dictionary<string, bool>();
 
-            Variations<int> variations = new Variations<int>(numbersPossibleToUse, 9);
+            Variations<int> variations = new Variations<int>(numbersPossibleToUse, 9, GenerateOption.WithoutRepetition);
             foreach (var permutation in variations)
             {
                 var calculatedSum = GetPromoCodeFormulaSum(permutation.ToArray());
                 if (ValidSumsDivisiblesBy11.Contains(calculatedSum))
                 {
                     var code = permutation.Aggregate("", (s, i) => s + i);
-                    if (!usedCodes.ContainsKey(code))
+                    //if (!usedCodes.ContainsKey(code))
                     {
-                        usedCodes[code] = true;
+                        //usedCodes[code] = true;
                         yield return code;
                     }
                 }
