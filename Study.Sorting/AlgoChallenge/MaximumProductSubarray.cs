@@ -2,6 +2,9 @@
 
 namespace Study.Algo.AlgoChallenge
 {
+    /// <summary>
+    /// Given an array that contains both positive and negative integers, find the product of the maximum product subarray. 
+    /// </summary>
     public class MaximumProductSubarray
     {
         public static int? RunImplementationA(int[] numberArray)
