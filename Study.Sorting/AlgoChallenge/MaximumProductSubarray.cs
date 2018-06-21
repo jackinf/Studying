@@ -38,9 +38,7 @@ namespace Study.Algo.AlgoChallenge
                 ? currentMax ?? defaultValue
                 : currentMax != null ? Math.Max(lastMax.Value, currentMax.Value) : lastMax;
 
-        /* Returns the product of max product subarray.
-        Assumes that the given array always has a subarray
-        with product more than 1 */
+        /* Source: https://www.geeksforgeeks.org/maximum-product-subarray/ and https://www.quora.com/How-do-I-solve-maximum-product-subarray-problems */
         public static int? RunImplementationB(int[] arr)
         {
             int maxEndingHere = 1, minEndingHere = 1, maxSoFar = 1;
