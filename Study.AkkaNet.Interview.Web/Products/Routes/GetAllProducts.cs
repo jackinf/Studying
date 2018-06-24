@@ -10,7 +10,7 @@ namespace Study.AkkaNet.Interview.Web.Products.Routes
         private readonly ILogger<GetAllProducts> _logger;
         private readonly IActorRef _productsActor;
 
-        public GetAllProducts(ProductActorProvider provider, ILogger<GetAllProducts> logger)
+        public GetAllProducts(ProductsActorProvider provider, ILogger<GetAllProducts> logger)
         {
             _logger = logger;
             _productsActor = provider.Get();

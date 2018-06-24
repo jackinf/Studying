@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Study.AkkaNet.Interview.Web.Products.Routes
 {
-    public class ProductApiController : Controller
+    [Route("/products")]
+    public class ProductApiController
     {
         public GetAllProducts GetAllProducts { get; }
 

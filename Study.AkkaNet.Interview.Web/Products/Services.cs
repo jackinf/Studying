@@ -6,7 +6,7 @@ namespace Study.AkkaNet.Interview.Web.Products
     {
         public static void AddProductServices(this IServiceCollection services)
         {
-            services.AddSingleton<ProductActorProvider>();
+            services.AddSingleton<ProductsActorProvider>();
             services.AddSingleton<Routes.GetAllProducts>();
         }
     }

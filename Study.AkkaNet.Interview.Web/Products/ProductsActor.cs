@@ -12,7 +12,9 @@ namespace Study.AkkaNet.Interview.Web.Products
         public ProductsActor(IList<Product> products)
         {
             Products = products;
+
             Receive<GetAllProducts>(_ => Sender.Tell(new ReadOnlyCollection<Product>(Products)));
+            Receive<UpdateStock>(m => Sender.Tell(UpdateStockAction(m)));
         }
 
         public ProductEvent UpdateStockAction(UpdateStock message)
