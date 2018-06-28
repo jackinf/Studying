@@ -17,6 +17,25 @@ class App extends Component {
         this.props.auth.logout();
     }
 
+    async checkIfLoggedIn() {
+        const token = this.props.auth.getToken();
+        console.info(`checkIfLoggedIn using token ${token}`);
+        await fetch('http://localhost:3010/api/private', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        })
+            .catch(reason => console.error(reason))
+            .then(value => console.info(value));
+    }
+
+    async getUserInfo() {
+        const response = await this.props.auth.userinfo();
+        console.log(response);
+    }
+
     render() {
         const {isAuthenticated} = this.props.auth;
 
@@ -47,13 +66,29 @@ class App extends Component {
                         }
                         {
                             isAuthenticated() && (
-                                <Button
-                                    bsStyle="primary"
-                                    className="btn-margin"
-                                    onClick={this.logout.bind(this)}
-                                >
-                                    Log Out
-                                </Button>
+                                <div>
+                                    <Button
+                                        bsStyle="primary"
+                                        className="btn-margin"
+                                        onClick={this.checkIfLoggedIn.bind(this)}
+                                    >
+                                        Check if logged in
+                                    </Button>
+                                    <Button
+                                        bsStyle="primary"
+                                        className="btn-margin"
+                                        onClick={this.getUserInfo.bind(this)}
+                                    >
+                                        Get user info
+                                    </Button>
+                                    <Button
+                                        bsStyle="primary"
+                                        className="btn-margin"
+                                        onClick={this.logout.bind(this)}
+                                    >
+                                        Log Out
+                                    </Button>
+                                </div>
                             )
                         }
                     </Navbar.Header>

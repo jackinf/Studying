@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Study.Auth0.Server.AuthPolicies.Handlers;
 using Study.Auth0.Server.AuthPolicies.Requirements;
 
@@ -18,6 +19,8 @@ namespace Study.Auth0.Server
 
         public IConfiguration Configuration { get; }
 
+        public static string RolesNamespace;
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -29,10 +32,17 @@ namespace Study.Auth0.Server
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
+
             }).AddJwtBearer(options =>
             {
                 options.Authority = domain;
                 options.Audience = Configuration["Auth0:ApiIdentifier"];
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = "name",
+                    RoleClaimType = "https://schemas.quickstarts.com/roles"
+                };
             });
 
             services.AddAuthorization(options =>
@@ -42,6 +52,10 @@ namespace Study.Auth0.Server
 
             // register the scope authorization handler
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+
+            RolesNamespace = Configuration["Auth0:RolesNamespace"];
+
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +70,7 @@ namespace Study.Auth0.Server
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
             app.UseStaticFiles();
 
             app.UseAuthentication();

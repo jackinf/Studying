@@ -56,7 +56,16 @@ export default class Auth {
         return new Date().getTime() < expiresAt;
     }
 
+    async userinfo() {
+        const token = this.getToken();
+        return await this.auth0.client.userInfo(token);
+    }
+
     login() {
         this.auth0.authorize();
+    }
+
+    getToken() {
+        return localStorage.getItem('id_token');
     }
 }
