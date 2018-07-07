@@ -1,0 +1,14 @@
+{
+  "name": "natours",
+  "version": "1.0.0",
+  "description": "Natours",
+  "main": "index.js",
+  "scripts": {
+    "compile:sass": "node-sass --watch sass/main.scss css/style.css"
+  },
+  "author": "Jevgeni",
+  "license": "ISC",
+  "devDependencies": {
+    "node-sass": "^4.9.1"
+  }
+}
